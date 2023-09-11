@@ -1,6 +1,7 @@
 using FluentValidation;
 using Labb1_Minimal_Api.Data;
 using Labb1_Minimal_Api.Models;
+using Labb1_Minimal_Api.Models.DTOS;
 using Labb1_Minimal_Api.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
@@ -55,9 +56,9 @@ app.MapGet("/books/{id:int}", async (int id, IRepository<Book> bookRepo) =>
     response.StatusCode = System.Net.HttpStatusCode.OK;
 
     return Results.Ok(response);
-}).WithName("GetCoupon");
+}).WithName("GetBook");
 
-app.MapPost("/books", async ([FromBody] Book newBook, IRepository<Book> bookRepo, IValidator<Book> validator) =>
+app.MapPost("/books", async ([FromBody] BookDto newBook, IRepository<Book> bookRepo, IValidator<BookDto> validator) =>
 {
     ApiResponse response = new() { IsSuccess = false, StatusCode = System.Net.HttpStatusCode.BadRequest };
 
@@ -73,7 +74,17 @@ app.MapPost("/books", async ([FromBody] Book newBook, IRepository<Book> bookRepo
     }
     else
     {
-        response.Result = await bookRepo.Create(newBook);
+        Book bookToCreate = new Book()
+        {
+            AuthorId = newBook.AuthorId,
+            GenreId = newBook.GenreId,
+            Description = newBook.Description,
+            LoanAble = newBook.LoanAble,
+            Title = newBook.Title,
+            Year = newBook.Year,
+        };
+
+        response.Result = await bookRepo.Create(bookToCreate);
         response.IsSuccess = true;
         response.StatusCode = System.Net.HttpStatusCode.OK;
 
@@ -82,7 +93,7 @@ app.MapPost("/books", async ([FromBody] Book newBook, IRepository<Book> bookRepo
 
 }).WithName("CreateBook");
 
-app.MapPut("/books", async (Book bookToUpdate, IRepository<Book> bookRepo, IValidator<Book> validator) =>
+app.MapPut("/books", async (EditBookDto bookToUpdate, IRepository<Book> bookRepo, IValidator<EditBookDto> validator) =>
 {
     ApiResponse response = new() { IsSuccess = false, StatusCode = System.Net.HttpStatusCode.BadRequest };
 
@@ -98,7 +109,18 @@ app.MapPut("/books", async (Book bookToUpdate, IRepository<Book> bookRepo, IVali
     }
     else
     {
-        response.Result = await bookRepo.Update(bookToUpdate);
+        Book bookToBeUpdated = new Book()
+        {
+            Id = bookToUpdate.Id,
+            AuthorId = bookToUpdate.AuthorId,
+            GenreId = bookToUpdate.GenreId,
+            Description = bookToUpdate.Description,
+            LoanAble = bookToUpdate.LoanAble,
+            Title = bookToUpdate.Title,
+            Year = bookToUpdate.Year,
+        };
+
+        response.Result = await bookRepo.Update(bookToBeUpdated);
         response.IsSuccess = true;
         response.StatusCode = System.Net.HttpStatusCode.OK;
 

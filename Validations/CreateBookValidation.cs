@@ -1,10 +1,11 @@
 ﻿using FluentValidation;
 using Labb1_Minimal_Api.Models;
+using Labb1_Minimal_Api.Models.DTOS;
 using System.Linq;
 
 namespace Labb1_Minimal_Api.Validations
 {
-    public class CreateBookValidation : AbstractValidator<Book>
+    public class CreateBookValidation : AbstractValidator<BookDto>
     {
         public CreateBookValidation()
         {

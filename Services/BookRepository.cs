@@ -1,6 +1,7 @@
 ﻿using Azure;
 using Labb1_Minimal_Api.Data;
 using Labb1_Minimal_Api.Models;
+using Labb1_Minimal_Api.Models.DTOS;
 using Microsoft.EntityFrameworkCore;
 
 namespace Labb1_Minimal_Api.Services
@@ -16,18 +17,21 @@ namespace Labb1_Minimal_Api.Services
 
         public async Task<IEnumerable<Book>> GetAll()
         {
-            return await _context.Books.ToListAsync();
+            var books = _context.Books.Include(x => x.Author).Include(x => x.Genre);
+
+            return books;
 
         }
 
         public async Task<Book> GetById(int id)
         {
-            return await _context.Books.FindAsync(id);
+            var book = await _context.Books.Include(x => x.Author).Include(x => x.Genre).FirstOrDefaultAsync(b => b.Id == id);
+
+            return book;
         }
 
         public async Task<Book> Create(Book book)
         {
-
             await _context.Books.AddAsync(book);
             await _context.SaveChangesAsync();
             return book;
