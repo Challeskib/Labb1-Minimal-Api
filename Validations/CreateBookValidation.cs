@@ -9,7 +9,7 @@ namespace Labb1_Minimal_Api.Validations
     {
         public CreateBookValidation()
         {
-            RuleFor(model => model.Year).InclusiveBetween(1, 2023);
+            RuleFor(model => model.Year).InclusiveBetween(1, 2024);
             RuleFor(model => model.Title).NotEmpty();
             RuleFor(model => model.AuthorId).NotEmpty();
             RuleFor(model => model.GenreId).NotEmpty();

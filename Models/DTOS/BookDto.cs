@@ -1,4 +1,6 @@
-﻿namespace Labb1_Minimal_Api.Models.DTOS
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+
+namespace Labb1_Minimal_Api.Models.DTOS
 {
     public class BookDto
     {
@@ -7,6 +9,8 @@
         public int Year { get; set; }
         public bool LoanAble { get; set; }
         public int AuthorId { get; set; }
+        public Genre Genre { get; set; }
+        public IEnumerable<Genre> Genres { get; set; }
         public int GenreId { get; set; }
     }
 }
