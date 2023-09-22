@@ -3,11 +3,8 @@ using Labb1_Minimal_Api.Data;
 using Labb1_Minimal_Api.Models;
 using Labb1_Minimal_Api.Models.DTOS;
 using Labb1_Minimal_Api.Services;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Collections;
-using System.ComponentModel.DataAnnotations;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +20,14 @@ builder.Services.AddScoped<IRepository<Book>, BookRepository>();
 builder.Services.AddScoped<IRepository<Genre>, GenreRepository>();
 builder.Services.AddScoped<IRepository<Author>, AuthorRepository>();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowMyOrigin",
+    builder => builder.WithOrigins("http://localhost:5173") // Your client app's URL here
+                       .AllowAnyHeader()
+                       .AllowAnyMethod());
+});
+
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 
 var app = builder.Build();
@@ -33,6 +38,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors("AllowMyOrigin");
 
 //Book code below
 
